@@ -1,0 +1,108 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+    string[] files = Directory.GetFiles(Server.MapPath("~/Documents/"), "*.xlsx");
+}
+@model List<Excel_Viewer.Helper.Sheet>
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Excel Viewer</title>
+    <!-- CSS Includes -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#">Spreadsheet Viewer</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item active">
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+                            browse
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <br />
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                if (i == 0)
+                {
+                    <li class="nav-item">
+                        <a class="nav-link active" id="@Model[i].SheetName.Replace(' ','_')-tab" data-toggle="tab" href="#@Model[i].SheetName.Replace(' ','_')" role="tab" aria-controls="@Model[i].SheetName">@Model[i].SheetName</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" id="@Model[i].SheetName.Replace(' ','_')-tab" data-toggle="tab" href="#@Model[i].SheetName.Replace(' ','_')" role="tab" aria-controls="@Model[i].SheetName">@Model[i].SheetName</a>
+                    </li>
+                }
+            }
+        </ul>
+        <div class="tab-content" id="myTabContent">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                if (i == 0)
+                {
+                    <div class="tab-pane fade show active" id="@Model[i].SheetName.Replace(' ','_')" role="tabpanel"><br />
+                        <div class="card">
+                            <div class="card-body"> <img src="@Model[i].Path" style="width: 11in" /></div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="tab-pane fade" id="@Model[i].SheetName.Replace(' ','_')" role="tabpanel"><br />
+                        <div class="card">
+                            <div class="card-body"> <img src="@Model[i].Path" style="width: 11in" /></div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Select a file</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="list-group">
+                        @foreach (string s in files)
+                        {
+                            string fileName = Path.GetFileName(s);
+                            @Html.ActionLink(fileName, "Index", "Home", new { fileName = fileName }, new { @class = "list-group-item" })
+                        }
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- JS includes -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script> @**@
+    <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+    <script src="//ajax.aspnetcdn.com/ajax/mvc/4.0/jquery.validate.unobtrusive.min.js"></script>
+</body>
+</html>
